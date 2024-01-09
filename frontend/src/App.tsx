@@ -1,53 +1,52 @@
-import { useState } from 'react';
-// import logo from './assets/images/logo-universal.png';
 import './App.css';
-import { Greet, RandomGrandLotto } from "../wailsjs/go/main/App";
-import { Badge, List } from "antd";
-type res = Array<number[]>[];
+import Header from './components/header';
+import Body from './components/body';
+import Footer from './components/footer';
+import { useHover } from 'ahooks';
+import { useEffect } from 'react';
+import { HideWindow } from '../wailsjs/go/window/Window';
 
+let closeWindow: number | null | undefined = null;
 function App() {
-    const [count, setCount] = useState(1);
-    const [res, setRes] = useState<res>([]);
-    const updateCount = (e: any) => setCount(e.target.value);
+    
+    const isHovering = useHover(() => document.getElementById('root'), {
+        onEnter: () => {
+            console.log('onEnter');
+        },
+        onLeave: () => {
+            console.log('onLeave');
+        },
+        onChange: isHover => {
+            console.log('onChange', isHover);
+        },
+    });
+    console.log(isHovering)
 
-    function getDate() {
-        console.log("count", count)
-        RandomGrandLotto(Number(count)).then((res) => {
-            if (res.length > 0) {
-                setRes(res)
-            }
-        })
+    // 默认3秒关闭
+    useEffect(() => {
+        handleCloseWindow()
+    }, [])
 
+    useEffect(() => {
+        if (isHovering) {
+            if (closeWindow) clearTimeout(closeWindow)
+        } else {
+            handleCloseWindow()
+        }
+    }, [isHovering])
+
+    // 关闭窗口函数
+    function handleCloseWindow() {
+        closeWindow = setTimeout(() => {
+            HideWindow()
+        }, 3000)
     }
 
-    console.log("res:", res)
-
     return (
-        <div id="App">
-            <div id="input" className="input-box">
-                生成条数：<input id="name" className="input" onChange={updateCount} autoComplete="off" name="input" type="text" />
-                <button className="btn" onClick={getDate}>生成</button>
-            </div>
-            <div className='container'>
-                <List
-                    className="demo-loadmore-list"
-                    // loading={initLoading}
-                    itemLayout="horizontal"
-                    // loadMore={loadMore}
-                    dataSource={res}
-                    renderItem={(item) => (
-                        <List.Item
-                            actions={[<a key="list-loadmore-edit">复制</a>]}
-                        >
-                            <div className='item'>
-                                {
-                                    item.map((item, index) => ( <Badge  color={(index > 4) ? 'blue':'red'} count={item} />))
-                                }
-                            </div>
-                        </List.Item>
-                    )}
-                />
-            </div>
+        <div id="App" className='app'>
+            <Header />
+            <Body />
+            <Footer />
         </div>
     )
 }

@@ -1,0 +1,14 @@
+.body {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: normal;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.content {
+    padding: 10px; 
+    text-align: center;
+    justify-content: center;
+}
