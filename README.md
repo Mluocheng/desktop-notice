@@ -24,15 +24,16 @@ To build a redistributable, production mode package, use `wails build`.
 这是一个使用wails和react-ts创建的桌面应用程序。
 
 ## 运行
+本地开发
+`set ENV_VAR=dev`
+`wails dev`
+wails doctor 检查您是否安装了正确的依赖项
 
-在项目目录下运行`wails dev`来运行开发服务器。
-
+## 打包
 在项目目录下运行`wails build -clean`来构建可发布的应用程序。
 `wails build -clean`
 `wails build -clean -devtools -debug -platform windows/arm64`
 
-
-wails doctor 检查您是否安装了正确的依赖项
 
 ## 项目配置
 
@@ -55,5 +56,16 @@ wails doctor 检查您是否安装了正确的依赖项
 
 ```
 
+## 使用
+desktop-notice.exe --title="标题" --text="放假" --type="text" --icon="default" --textAlign="center"
 
-desktop-notice.exe --title="标题" --content="放假"
+desktop-notice.exe --title="标题" --text="[{\"type\":\"text\",\"text\":\"最新通知，链接如下：最新通知，链接如下：最新通知，链接如下：\"},{\"type\":\"row\",\"text\":\"\"},{\"type\":\"link\",\"text\":\"www.baidu.com\"},{\"type\":\"row\",\"text\":\"\"},{\"type\":\"img\",\"text\":\"https://cdn.wwads.cn/creatives/m88Dv8ffgDW2NO9TVOfe2Ee3QYRtwORH2acMe3Id.png\",\"style\":{\"width\":\"120px\",\"height\":\"120px\"}}]" --icon="default" --textAlign="start"
+## 参数说明
+```
+--title 通知标题
+--text 通知内容，对应type显示， 支持json字符串，支持style等标签支持的其他扩展属性， type 扩展 row 属性代表换行。 检测到已json时优先显示，type字段无效！！！
+--type 通知类型，支持text,link,img 
+--icon 通知图标，支持default
+--textAlign 通知内容对齐方式，支持textAlign 属性 start,center,end ...
+
+```

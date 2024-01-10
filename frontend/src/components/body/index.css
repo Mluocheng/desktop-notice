@@ -7,8 +7,27 @@
   overflow-y: auto;
 }
 
+/* 定义滚动条的宽度、颜色等 */
+.body::-webkit-scrollbar {
+  width: 4px; /* 滚动条宽度 */
+}
+
+/* 定义滚动条轨道的背景色 */
+.body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* 定义滚动条滑块 */
+.body::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* 定义滚动条悬停时滑块的颜色 */
+.body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .content {
-    padding: 10px; 
-    text-align: center;
-    justify-content: center;
+  padding: 10px;
+  justify-content: center;
 }

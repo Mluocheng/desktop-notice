@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 )
 
 // App struct
@@ -19,4 +20,5 @@ func (a *App) SetContext(ctx context.Context) {
 }
 
 func (a *App) shutdown(ctx context.Context) {
+	fmt.Println("Shutdown...")
 }

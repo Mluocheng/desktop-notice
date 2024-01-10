@@ -8,8 +8,11 @@ import (
 )
 
 type Data struct {
-	DataType string
-	DataText string
+	DataType  string
+	DataText  string
+	DataTitle string
+	DataIcon  string
+	TextAlign string
 }
 
 type Window struct {
@@ -41,6 +44,6 @@ func (w *Window) HideWindow() {
 }
 
 // 设置窗口位置
-func (w *Window) SetWindowAlwaysOnTop(alwaysOnTop bool) {
-
+func (w *Window) GetWindow() *Window {
+	return w
 }

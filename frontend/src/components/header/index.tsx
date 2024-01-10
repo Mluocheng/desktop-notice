@@ -1,21 +1,21 @@
-import './index.css';
+import { FC, memo } from 'react';
 import logo from '../../assets/images/logo.png';
+import close from '../../assets/images/close.png';
+import './index.css';
 
-export type HeaderProps = {
-    title?: string;
-}
-
-function Header(props: HeaderProps) {
-    const { title = "通知" } = props
+const Header: FC<WailsProps & { handelClose: Function}> = memo(({ DataTitle, DataIcon, handelClose }: WailsProps & { handelClose: Function}) => {
+    console.log("DataIco:",DataIcon)
     return (
         <div className='header'>
             <div className='left'>
-                <img className='logo' src={logo} alt="" />
-                {title}
+                <img className='logo' src={DataIcon === "default" ? logo : DataIcon} alt="logo" />
+                <span className='lefetitle'>{DataTitle}</span>
             </div>
-            <div className='right'></div>
+            <div className='right'>
+                <img className='close' onClick={() => handelClose()} src={close} alt="关闭" />
+            </div>
         </div>
     )
-}
+})
 
 export default Header;

@@ -7,8 +7,10 @@ interface Runtime {
     Hide: Function,
     Show: Function,
     WindowSetMaxSize: Function
+    Quit: Function
     
 }
 declare global {
   interface Window { runtime: Runtime; }
 }
+

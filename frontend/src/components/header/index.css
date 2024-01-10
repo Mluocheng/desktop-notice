@@ -5,9 +5,25 @@
 .left{
     align-items: center;
     display: flex;    
+    width: 100%;
+    overflow: hidden;
+}
+.lefetitle{
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 90%;
 }
 .logo{
     width: 24px;
     height: 24px;
     margin-right: 4px;
+    border-radius: 50%;
+}
+
+.close{
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
 }
