@@ -22,6 +22,7 @@ To build a redistributable, production mode package, use `wails build`.
 ## 项目说明
 
 这是一个使用wails和react-ts创建的桌面应用程序。
+![Alt text](image.png)
 
 ## 运行
 本地开发
