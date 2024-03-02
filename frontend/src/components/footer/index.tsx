@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import './index.css';
 
-function Header() {
+function Footer() {
 
     return (
-       <div className='header'>
+       <div className='footer'>
         
        </div>
     )
 }
 
-export default Header;
+export default Footer;

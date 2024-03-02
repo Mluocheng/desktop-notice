@@ -8,11 +8,15 @@ import (
 )
 
 type Data struct {
-	DataType  string
-	DataText  string
-	DataTitle string
-	DataIcon  string
-	TextAlign string
+	DataType             string
+	DataText             string
+	DataTitle            string
+	DataIcon             string
+	TextAlign            string
+	DataHtml             string
+	Width                int
+	Height               int
+	AutoCloseWindowTimer int
 }
 
 type Window struct {

@@ -4,7 +4,8 @@ import Body from './components/body';
 import Footer from './components/footer';
 import { useHover } from 'ahooks';
 import { useCallback, useEffect, useState } from 'react';
-import { GetWindow, HideWindow } from '../wailsjs/go/window/Window';
+import { GetWindow, HideWindow, ShowWindow } from '../wailsjs/go/window/Window';
+import { request } from './utils/request';
 
 let closeWindowTimer: number | null | undefined = null;
 
@@ -12,29 +13,44 @@ function App() {
     const [wailsData, setWailsData] = useState<WailsProps>({})
     const isHovering = useHover(() => document.getElementById('root'));
 
+    useEffect(() => {
+        // ShowWindow();
+        initWindowUtils();
+    }, [])
+
+    function initWindowUtils() {
+        window.DesktopNotice = {
+            myGlobalFunction: () => console.log('myGlobalFunction'),
+            closeWindow: () => window.runtime.Quit(),
+            request: (url, options) => request(url, options),
+        };
+    }
+
     // 默认3秒关闭
     useEffect(() => {
-        initPosition()
         getWailData();
         return () => {
             clearCloseWindowTimer();
         };
     }, [])
 
-    function initPosition() {
-        const x = (screen.width - 336) * window.devicePixelRatio - 16
-        const y = (screen.height - 200) * window.devicePixelRatio - 76
-        window.runtime.WindowSetPosition(x, y)
-    }
+    // const initPosition = useCallback(() => {
+    //     const x = (screen.width - (wailsData?.Width || 336)) * window.devicePixelRatio - 16
+    //     const y = (screen.height - (wailsData?.Height || 200)) * window.devicePixelRatio - 76
+    //     window.runtime.WindowSetPosition(x, y)
+    // }, [wailsData?.Width, wailsData?.Height])
 
     useEffect(() => {
-        if (isHovering) {
-            console.log('isHovering', isHovering, closeWindowTimer, "清除倒计时关闭")
-            clearCloseWindowTimer()
-        } else {
-            startCloseWindowTime()
+        console.log("定时器", wailsData.AutoCloseWindowTimer, wailsData.AutoCloseWindowTimer !== -1)
+        if (wailsData.AutoCloseWindowTimer && (wailsData.AutoCloseWindowTimer !== -1)) {
+            if (isHovering) {
+                console.log('isHovering', isHovering, closeWindowTimer, "清除倒计时关闭")
+                clearCloseWindowTimer()
+            } else {
+                startCloseWindowTime()
+            }
         }
-    }, [isHovering])
+    }, [isHovering, wailsData.AutoCloseWindowTimer])
 
 
     function startCloseWindowTime() {
@@ -48,7 +64,7 @@ function App() {
                     window.runtime.Quit()
                 }
             }
-        }, 5000)
+        }, wailsData?.AutoCloseWindowTimer || 5000)
     }
 
     function clearCloseWindowTimer() {
@@ -71,7 +87,12 @@ function App() {
 
     async function getWailData() {
         const data = await GetWindow()
+        console.log("data.Data", data.Data)
         if (data.Data) setWailsData(data.Data)
+
+        const x = (screen.width - (data.Data?.Width || 336)) * window.devicePixelRatio - 16
+        const y = (screen.height - (data.Data?.Height || 200)) * window.devicePixelRatio - 76
+        window.runtime.WindowSetPosition(x, y)
     }
 
 

@@ -11,7 +11,10 @@ import (
 	"strings"
 
 	"desktop-notice/backend/test"
+	"desktop-notice/backend/utils"
 	"desktop-notice/backend/window"
+
+	// "desktop-notice/backend/wails/v2"
 
 	"github.com/getlantern/systray"
 	"github.com/wailsapp/wails/v2"
@@ -24,25 +27,44 @@ import (
 var assets embed.FS
 var DataTitle string
 var DataType string
+var DataHtml string
 var DataText string // text link img
 var DataIcon string
 var TextAlign string
+var Width int
+var Height int
+var AutoCloseWindowTimer int // 自动关闭窗口的时间 -1 表示不关闭，单位 毫秒
+
+// const defaultHtml = `<div>我是div<button id="button" onclick="window.DesktopNotice.request(http://localhost:3000,{ data: { name: 1 } })">按钮</button>
+// <div onClick="window.DesktopNotice.request(http://localhost:3000/postTest,{method: 'post',data: {name: '工具人' }} )">post请求</div>
+// <div onClick="window.DesktopNotice.myGlobalFunction()">点击div</div>
+// </div>`
+
+// const defaultHtml = `E:\ZHIXIN\automation_auto\DesktopNotice\test\index.html`
+const defaultHtml = ``
 
 func init() {
 	envVar := os.Getenv("ENV_VAR")
 	// 定义命令行参数
-	flag.StringVar(&DataTitle, "title", "自动化组通www知222222", "帮助信息")
+	flag.StringVar(&DataTitle, "title", "自动化组通知", "标题")
 	if envVar == "dev" {
+		flag.StringVar(&DataHtml, "html", defaultHtml, "通知信息内容")
 		flag.StringVar(&DataText, "text", "[{\"type\":\"text\",\"text\":\"最新通知，链接如下：最新通知，链接如下：最新通知，链接如下：\"},{\"type\":\"row\",\"text\":\"\"},{\"type\":\"link\",\"text\":\"www.baidu.com\"},{\"type\":\"row\",\"text\":\"\"},{\"type\":\"img\",\"text\":\"https://cdn.wwads.cn/creatives/m88Dv8ffgDW2NO9TVOfe2Ee3QYRtwORH2acMe3Id.png\",\"style\":{\"width\":\"120px\",\"height\":\"120px\"}}]", "通知信息内容")
 	} else {
+		flag.StringVar(&DataHtml, "html", "", "通知信息内容")
 		flag.StringVar(&DataText, "text", "", "通知信息内容")
 	}
 	flag.StringVar(&DataType, "type", "text", "通知信息类型")
 	flag.StringVar(&DataIcon, "icon", "default", "图标")
 	flag.StringVar(&TextAlign, "textAlign", "start", "内容剧中")
+	flag.IntVar(&Width, "width", 336, "宽度")
+	flag.IntVar(&Height, "height", 200, "高度")
+	flag.IntVar(&AutoCloseWindowTimer, "autoCloseWindowTimer", 5000, "自动关闭时间")
+
 }
 
 func main() {
+
 	// 在Wails初始化之前解析命令行参数
 	flag.Parse()
 
@@ -51,8 +73,8 @@ func main() {
 	_testApp := test.NewTest()
 	_window := window.NewWindow()
 
-	width := 336
-	height := 200
+	width := Width
+	height := Height
 
 	// 如果图片路径不是http开头的转base64
 	if !strings.HasPrefix(DataIcon, "http") && (DataIcon != "default") {
@@ -65,12 +87,25 @@ func main() {
 		DataIcon = "data:image/png;base64," + res
 	}
 
+	// 如果html是以html结尾的转为html字符串
+	if strings.HasSuffix(DataHtml, ".html") {
+		res, err := utils.HtmlString(DataHtml)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+		DataHtml = res
+	}
+
 	data := &window.Data{
-		DataTitle: DataTitle,
-		DataType:  DataType,
-		DataText:  DataText,
-		DataIcon:  DataIcon,
-		TextAlign: TextAlign,
+		DataTitle:            DataTitle,
+		DataType:             DataType,
+		DataText:             DataText,
+		DataHtml:             DataHtml,
+		DataIcon:             DataIcon,
+		TextAlign:            TextAlign,
+		Width:                width,
+		Height:               height,
+		AutoCloseWindowTimer: AutoCloseWindowTimer,
 	}
 	// go systray.Run(trayReady, trayExit)
 	// 配置 https://wails.io/zh-Hans/docs/reference/options/
@@ -85,16 +120,19 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		DisableResize:     true,  // 禁止调整窗口大小
+		DisableResize:     false, // 禁止调整窗口大小
 		Frameless:         true,  // 窗口无边框
 		StartHidden:       false, // 窗口是否隐藏
 		AlwaysOnTop:       true,  // 窗口固定在最顶层
 		HideWindowOnClose: true,  // 窗口关闭时隐藏窗口
-		// BackgroundColour:  &options.RGBA{R: 255, G: 0, B: 0, A: 128},
+		// BackgroundColour:  "transparent", // &options.RGBA{R: 255, G: 255, B: 255, A: 100},
+
 		Windows: &windows.Options{
 			WebviewIsTransparent: true,            // Webview 透明
 			WindowIsTranslucent:  true,            // 窗口半透
 			BackdropType:         windows.Acrylic, // 窗口背景
+			// DisableFramelessWindowDecorations: false,
+			// DisableWindowIcon:                 true, // 根据需要禁用窗口图标
 		},
 		OnStartup: func(ctx context.Context) {
 			_app.SetContext(ctx)

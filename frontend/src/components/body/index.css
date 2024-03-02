@@ -5,6 +5,7 @@
   font-weight: normal;
   flex: 1;
   overflow-y: auto;
+  background-color: white;
 }
 
 /* 定义滚动条的宽度、颜色等 */
@@ -28,6 +29,5 @@
 }
 
 .content {
-  padding: 10px;
   justify-content: center;
 }
