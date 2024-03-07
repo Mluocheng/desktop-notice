@@ -8,4 +8,5 @@ interface WailsProps {
     "Width"?: number,
     "Height"?: number,
     "AutoCloseWindowTimer"?: number;
+    "ShowClose"?: number;
   }

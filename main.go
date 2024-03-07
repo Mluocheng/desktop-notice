@@ -34,14 +34,15 @@ var TextAlign string
 var Width int
 var Height int
 var AutoCloseWindowTimer int // 自动关闭窗口的时间 -1 表示不关闭，单位 毫秒
+var ShowClose int            // 是否显示关闭按钮 默认 1 显示  0 不显示
 
-// const defaultHtml = `<div>我是div<button id="button" onclick="window.DesktopNotice.request(http://localhost:3000,{ data: { name: 1 } })">按钮</button>
-// <div onClick="window.DesktopNotice.request(http://localhost:3000/postTest,{method: 'post',data: {name: '工具人' }} )">post请求</div>
-// <div onClick="window.DesktopNotice.myGlobalFunction()">点击div</div>
-// </div>`
+const defaultHtml = `<div>我是div<button id="button" onclick="window.DesktopNotice.request(http://localhost:3000)">按钮</button>
+<div onClick="window.DesktopNotice.request(http://localhost:3000/postTest,{method: 'post',data: {name: '工具人' },finallyClose:true} )">post请求</div>
+<div onClick="window.DesktopNotice.myGlobalFunction()">点击div</div>
+</div>`
 
 // const defaultHtml = `E:\ZHIXIN\automation_auto\DesktopNotice\test\index.html`
-const defaultHtml = ``
+// const defaultHtml = ``
 
 func init() {
 	envVar := os.Getenv("ENV_VAR")
@@ -60,6 +61,7 @@ func init() {
 	flag.IntVar(&Width, "width", 336, "宽度")
 	flag.IntVar(&Height, "height", 200, "高度")
 	flag.IntVar(&AutoCloseWindowTimer, "autoCloseWindowTimer", 5000, "自动关闭时间")
+	flag.IntVar(&ShowClose, "showClose", 1, "是否展示关闭")
 
 }
 
@@ -106,6 +108,7 @@ func main() {
 		Width:                width,
 		Height:               height,
 		AutoCloseWindowTimer: AutoCloseWindowTimer,
+		ShowClose:            ShowClose,
 	}
 	// go systray.Run(trayReady, trayExit)
 	// 配置 https://wails.io/zh-Hans/docs/reference/options/

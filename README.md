@@ -59,13 +59,13 @@ wails doctor 检查您是否安装了正确的依赖项
 ```
 
 ## 使用
-desktop-notice.exe --title="标题" --html="<div>我是div<div>" --autoCloseWindowTimer=-1
+desktop-notice.exe --title="标题" --html="<div style="color:red;">我是div<div>" --showClose=0
 
 desktop-notice.exe --title="标题" --text="放假" --type="text" --icon="default" --textAlign="center"
 
 desktop-notice.exe --title="标题" --text="放假" --type="text" --width=536 --height=400 --autoCloseWindowTimer=-1
 
-desktop-notice.exe --title="标题" --autoCloseWindowTimer=-1 --html="<div>来自传入的dom节点<button onclick="window.DesktopNotice.request(http://localhost:3000)">按钮 get请求</button><div onClick="window.DesktopNotice.request(http://localhost:3000/postTest,{method:'post',data:{name:'工具人'}})">post请求</div><div onClick="window.DesktopNotice.myGlobalFunction()">点击div</div></div>" 
+desktop-notice.exe --title="标题" --autoCloseWindowTimer=-1 --html="<div>来自传入的dom节点<button onclick="window.DesktopNotice.request(http://localhost:3000)">按钮 get请求</button><div onClick="window.DesktopNotice.request(http://localhost:3000/postTest,{method:'post',data:{name:'工具人'},finallyClose:true})">post请求</div><div onClick="window.DesktopNotice.myGlobalFunction()">点击div</div></div>"
 
 desktop-notice.exe --title="标题" --html="E:\ZHIXIN\automation_auto\DesktopNotice\test\index.html" --autoCloseWindowTimer=-1
 
@@ -86,9 +86,10 @@ const html = `E:\ZHIXIN\automation_auto\DesktopNotice\test\index.html`
 --width 宽 默认336
 --height 高 默认200
 --autoCloseWindowTimer 自动关闭窗口的时间默认5000， 设置为-1 不自动关闭
+--showClose 是否显示关闭按钮 默认 1 显示  0 不显示
 
 ```
 
 ## window 挂载方法
-    window.DesktopNotice.request(url, options) 发起请求
+    window.DesktopNotice.request(url, options) 发起请求 options:{finallyClose:true} 请求完成后会关闭窗口
     window.DesktopNotice.closeWindow() 关闭窗口

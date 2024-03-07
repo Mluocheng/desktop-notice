@@ -17,6 +17,7 @@ type Data struct {
 	Width                int
 	Height               int
 	AutoCloseWindowTimer int
+	ShowClose            int
 }
 
 type Window struct {

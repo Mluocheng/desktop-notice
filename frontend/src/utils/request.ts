@@ -9,7 +9,7 @@ export function request(
 
 	// 先给属性名增加双引号，然后将值的单引号转换为双引号
 	const correctedJsonString = options?.replace(/(\w+):/g, '"$1":').replace(/'/g, '"'); // 将单引号转换为双引号
-	let _options: AxiosRequestConfig = {};
+	let _options: AxiosRequestConfig & { finallyClose?: boolean} = {};
 	// 现在尝试转换为JSON对象
 	try {
 	_options = correctedJsonString ? JSON.parse(correctedJsonString) : '';
@@ -18,14 +18,15 @@ export function request(
 	console.error("Parsing error:", e);
 	}
 
+	const { finallyClose, ...others } = _options;
 	// 请求配置
 	const axiosConfig = {
 		method: 'get', // 可以是 'get', 'post', 'put', 'delete' 等
 		url: url,
-		..._options,
+		...others,
 		headers: {
 			'Content-Type': 'application/json',
-			..._options?.headers
+			...others?.headers
 		},
 		timeout: 1000 * 60 * 10
 	};
@@ -58,5 +59,10 @@ export function request(
 					// headers: JSON.parse(JSON.stringify(error.response?.headers))
 				}
 			});
+		}).finally(() => {
+			if(finallyClose) {
+				window.runtime.Quit()
+				console.log("执行完成")
+			}
 		});
 }

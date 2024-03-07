@@ -3,7 +3,7 @@ import logo from '../../assets/images/logo.png';
 import close from '../../assets/images/close.png';
 import './index.css';
 
-const Header: FC<WailsProps & { handelClose: Function}> = memo(({ DataTitle, DataIcon, handelClose }: WailsProps & { handelClose: Function}) => {
+const Header: FC<WailsProps & { handelClose: Function}> = memo(({ DataTitle, DataIcon, handelClose, ShowClose }: WailsProps & { handelClose: Function}) => {
     console.log("DataIco:",DataIcon)
     return (
         <div className='header'>
@@ -12,7 +12,7 @@ const Header: FC<WailsProps & { handelClose: Function}> = memo(({ DataTitle, Dat
                 <span className='lefetitle'>{DataTitle}</span>
             </div>
             <div className='right'>
-                <img className='close' onClick={() => handelClose()} src={close} alt="关闭" />
+                {!!ShowClose && <img className='close' onClick={() => handelClose()} src={close} alt="关闭" />}
             </div>
         </div>
     )
